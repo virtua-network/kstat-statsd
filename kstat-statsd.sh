@@ -29,15 +29,16 @@ function kstats() {
     kstat -p caps::cpucaps_zone*
 }
 
-## values to be compute before sending to statsd 
-CPU_USAGE="$(kstats | grep ':usage' | awk '{ print $2 }')"
-CPU_BASELINE="$(kstats | grep ':baseline' | awk '{ print $2 }')"
-CPU_MAXUSAGE="$(kstats | grep ':maxusage' | awk '{ print $2 }')"
-CPU_CAP="$(kstats | grep ':value' | awk '{ print $2 }')"
-
-## Send values to statsd
+## main loop
 while [ 1 ]
 do
+    ## values to be compute before sending to statsd 
+    CPU_USAGE="$(kstats | grep ':usage' | awk '{ print $2 }')"
+    CPU_BASELINE="$(kstats | grep ':baseline' | awk '{ print $2 }')"
+    CPU_MAXUSAGE="$(kstats | grep ':maxusage' | awk '{ print $2 }')"
+    CPU_CAP="$(kstats | grep ':value' | awk '{ print $2 }')"
+
+    ## Send values to statsd
     echo "${PREFIX}.usage:${CPU_USAGE}|g
 ${PREFIX}.baseline:${CPU_BASELINE}|g
 ${PREFIX}.maxusage:${CPU_MAXUSAGE}|g
